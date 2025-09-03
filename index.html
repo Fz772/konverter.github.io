@@ -3,49 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konversi Desimal ke Biner</title>
+    <title>Konverter Bilangan Elegan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2c3e50;     /* Biru tua elegan */
-            --secondary: #3498db;   /* Biru cerah */
-            --accent: #e74c3c;      /* Merah untuk aksen */
-            --light: #ecf0f1;       /* Abu-abu sangat muda */
-            --dark: #2c3e50;        /* Teks gelap */
-            --success: #2ecc71;     /* Hijau untuk hasil */
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #4f46e5;
+            --accent: #0ea5e9;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --success: #10b981;
+            --card-bg: #ffffff;
+            --card-shadow: rgba(0, 0, 0, 0.08);
+            --gradient-start: #2563eb;
+            --gradient-end: #4f46e5;
+            --menu-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode {
+            --light: #1e293b;
+            --dark: #f8fafc;
+            --darker: #0f172a;
+            --card-bg: #334155;
+            --card-shadow: rgba(0, 0, 0, 0.2);
+            --menu-bg: rgba(0, 0, 0, 0.2);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
         }
         
         body {
-            background: linear-gradient(135deg, var(--primary) 0%, #1a2530 100%);
-            color: var(--light);
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: var(--dark);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
         }
         
         .container {
             width: 100%;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
             padding: 2.5rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
         }
         
         header {
             text-align: center;
             margin-bottom: 2.5rem;
+            position: relative;
+        }
+        
+        .theme-switch {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         h1 {
@@ -53,19 +89,72 @@
             margin-bottom: 0.5rem;
             color: var(--light);
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
         
         .subtitle {
-            color: var(--secondary);
+            color: var(--light);
             font-size: 1.2rem;
             margin-bottom: 1.5rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        /* Menu Tabs */
+        .menu-tabs {
+            display: flex;
+            background: var(--menu-bg);
+            border-radius: 15px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            color: var(--light);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            opacity: 1;
+            box-shadow: 0 4px 12px var(--card-shadow);
+        }
+        
+        .tab i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Content Areas */
+        .content-area {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .content-area.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .conversion-box {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
+            background: var(--card-bg);
+            border-radius: 20px;
             padding: 2rem;
-            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px var(--card-shadow);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
@@ -78,103 +167,99 @@
         label {
             font-weight: 600;
             margin-bottom: 0.8rem;
-            color: var(--secondary);
+            color: var(--dark);
             font-size: 1.1rem;
+            display: flex;
+            align-items: center;
         }
         
-        input[type="number"] {
+        label i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        input[type="text"], input[type="number"] {
             padding: 1rem 1.2rem;
             border: none;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            color: var(--light);
+            border-radius: 12px;
+            background: var(--light);
+            color: var(--darker);
             font-size: 1.2rem;
-            border: 2px solid transparent;
+            border: 2px solid #e2e8f0;
             transition: all 0.3s ease;
-        }
-        
-        input[type="number"]:focus {
-            outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
-        }
-        
-        .binary-output {
-            background: rgba(46, 204, 113, 0.15);
-            border: 2px solid var(--success);
-            border-radius: 10px;
-            padding: 1.2rem;
-            font-size: 1.4rem;
+            width: 100%;
             font-weight: 600;
+        }
+        
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        
+        .binary-output, .decimal-output {
+            background: var(--light);
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 700;
             text-align: center;
-            color: var(--success);
-            min-height: 70px;
+            color: var(--darker);
+            min-height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             margin-top: 1rem;
             transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
         
-        .explanation {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-top: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        h2 {
-            color: var(--secondary);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-        
-        p {
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-        
-        .steps {
-            margin-left: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .steps li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .examples {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
+        .bit-representation {
+            display: flex;
+            justify-content: center;
             margin-top: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
         
-        .example-item {
-            background: rgba(52, 152, 219, 0.15);
+        .bit-box {
+            width: 50px;
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--light);
             border-radius: 8px;
-            padding: 0.8rem;
-            text-align: center;
-            border: 1px solid rgba(52, 152, 219, 0.3);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
         
-        .decimal {
-            font-weight: 600;
-            color: var(--secondary);
+        .bit-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
         }
         
-        .binary {
-            font-weight: 600;
-            color: var(--success);
+        .bit-position {
+            font-size: 0.7rem;
+            color: var(--dark);
+            margin-top: 4px;
         }
         
         footer {
             text-align: center;
             margin-top: 2.5rem;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--light);
             font-size: 0.9rem;
+            opacity: 0.8;
         }
         
         @media (max-width: 768px) {
@@ -186,134 +271,258 @@
                 font-size: 2.2rem;
             }
             
-            .conversion-box, .explanation {
+            .conversion-box {
                 padding: 1.5rem;
             }
-        }
-        
-        /* Tooltip styling */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            border-bottom: 1px dotted var(--secondary);
-            cursor: help;
-        }
-        
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: var(--dark);
-            color: var(--light);
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
+            
+            .bit-box {
+                width: 40px;
+                height: 50px;
+            }
+            
+            .bit-value {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Konversi Desimal ke Biner</h1>
-            <p class="subtitle">Alat konversi numerik yang elegan dan profesional</p>
+            <div class="theme-switch" id="themeSwitch">
+                <i class="fas fa-moon"></i>
+            </div>
+            <h1>Konverter Bilangan</h1>
+            <p class="subtitle">Alat konversi Desimal ⇄ Biner yang elegan</p>
         </header>
         
-        <div class="conversion-box">
-            <div class="input-group">
-                <label for="decimalInput">Masukkan Angka Desimal</label>
-                <input type="number" id="decimalInput" min="0" placeholder="Masukkan angka desimal (0-255)" oninput="updateBinary()">
+        <div class="menu-tabs">
+            <div class="tab active" data-tab="decimalToBinary">
+                <i class="fas fa-exchange-alt"></i> Desimal ke Biner
             </div>
-            
-            <div class="result">
-                <label>Hasil Konversi Biner</label>
-                <div class="binary-output" id="binaryOutput">
-                    Hasil akan muncul di sini
+            <div class="tab" data-tab="binaryToDecimal">
+                <i class="fas fa-sync-alt"></i> Biner ke Desimal
+            </div>
+        </div>
+        
+        <!-- Desimal ke Biner -->
+        <div class="content-area active" id="decimalToBinary">
+            <div class="conversion-box">
+                <div class="input-group">
+                    <label for="decimalInput"><i class="fas fa-hashtag"></i> Masukkan Angka Desimal</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="decimalInput" min="0" max="255" placeholder="0 - 255" value="42">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="binaryOutput"><i class="fas fa-binary"></i> Hasil Konversi Biner</label>
+                    <div class="binary-output" id="binaryOutput">
+                        00101010
+                    </div>
+                </div>
+                
+                <div class="bit-representation">
+                    <div class="bit-box">
+                        <div class="bit-value" id="bit7">0</div>
+                        <div class="bit-position">128</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="bit6">0</div>
+                        <div class="bit-position">64</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="bit5">1</div>
+                        <div class="bit-position">32</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="bit4">0</div>
+                        <div class="bit-position">16</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="bit3">1</div>
+                        <div class="bit-position">8</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="bit2">0</div>
+                        <div class="bit-position">4</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="bit1">1</div>
+                        <div class="bit-position">2</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="bit0">0</div>
+                        <div class="bit-position">1</div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="explanation">
-            <h2>Apa itu Sistem Biner?</h2>
-            <p>Sistem biner adalah sistem angka yang menggunakan basis 2, berbeda dengan sistem desimal yang menggunakan basis 10. Sistem ini hanya menggunakan dua digit: 0 dan 1.</p>
-            
-            <h2>Cara Konversi Desimal ke Biner</h2>
-            <ol class="steps">
-                <li>Bagi angka desimal dengan 2</li>
-                <li>Catat sisa hasil pembagian (0 atau 1)</li>
-                <li>Ulangi proses dengan hasil pembagian sampai hasilnya 0</li>
-                <li>Baca sisa hasil pembagian dari bawah ke atas</li>
-            </ol>
-            
-            <h2>Contoh Konversi</h2>
-            <div class="examples">
-                <div class="example-item">
-                    <div class="decimal">10</div>
-                    <div class="binary">1010</div>
+        <!-- Biner ke Desimal -->
+        <div class="content-area" id="binaryToDecimal">
+            <div class="conversion-box">
+                <div class="input-group">
+                    <label for="binaryInput"><i class="fas fa-binary"></i> Masukkan Angka Biner (8-bit)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="binaryInput" maxlength="8" placeholder="Contoh: 00101010" value="00101010">
+                    </div>
                 </div>
-                <div class="example-item">
-                    <div class="decimal">15</div>
-                    <div class="binary">1111</div>
+                
+                <div class="input-group">
+                    <label for="decimalOutput"><i class="fas fa-hashtag"></i> Hasil Konversi Desimal</label>
+                    <div class="decimal-output" id="decimalOutput">
+                        42
+                    </div>
                 </div>
-                <div class="example-item">
-                    <div class="decimal">32</div>
-                    <div class="binary">100000</div>
-                </div>
-                <div class="example-item">
-                    <div class="decimal">63</div>
-                    <div class="binary">111111</div>
-                </div>
-                <div class="example-item">
-                    <div class="decimal">128</div>
-                    <div class="binary">10000000</div>
-                </div>
-                <div class="example-item">
-                    <div class="decimal">255</div>
-                    <div class="binary">11111111</div>
+                
+                <div class="bit-representation">
+                    <div class="bit-box">
+                        <div class="bit-value" id="b-bit7">0</div>
+                        <div class="bit-position">128</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="b-bit6">0</div>
+                        <div class="bit-position">64</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="b-bit5">1</div>
+                        <div class="bit-position">32</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="b-bit4">0</div>
+                        <div class="bit-position">16</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="b-bit3">1</div>
+                        <div class="bit-position">8</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="b-bit2">0</div>
+                        <div class="bit-position">4</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="b-bit1">1</div>
+                        <div class="bit-position">2</div>
+                    </div>
+                    <div class="bit-box">
+                        <div class="bit-value" id="b-bit0">0</div>
+                        <div class="bit-position">1</div>
+                    </div>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>Dibuat dengan ❤️ menggunakan HTML, CSS, dan JavaScript | 2025</p>
+            <p>Dibuat dengan <i class="fas fa-heart" style="color: #ef4444;"></i> menggunakan HTML, CSS, dan JavaScript</p>
         </footer>
     </div>
 
     <script>
-        function updateBinary() {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Element references
+            const themeSwitch = document.getElementById('themeSwitch');
+            const tabs = document.querySelectorAll('.tab');
+            const contentAreas = document.querySelectorAll('.content-area');
             const decimalInput = document.getElementById('decimalInput');
             const binaryOutput = document.getElementById('binaryOutput');
+            const binaryInput = document.getElementById('binaryInput');
+            const decimalOutput = document.getElementById('decimalOutput');
             
-            if (decimalInput.value === '') {
-                binaryOutput.textContent = 'Hasil akan muncul di sini';
-                return;
+            // Initialize with default values
+            updateDecimalToBinary(42);
+            updateBinaryToDecimal("00101010");
+            
+            // Theme switch functionality
+            themeSwitch.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                const icon = this.querySelector('i');
+                if (document.body.classList.contains('dark-mode')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+            
+            // Tab switching functionality
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding content area
+                    contentAreas.forEach(area => {
+                        area.classList.remove('active');
+                        if (area.id === tabId) {
+                            area.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Decimal to Binary conversion
+            decimalInput.addEventListener('input', function() {
+                let value = Math.min(255, Math.max(0, parseInt(this.value) || 0));
+                this.value = value;
+                updateDecimalToBinary(value);
+            });
+            
+            // Binary to Decimal conversion
+            binaryInput.addEventListener('input', function() {
+                // Allow only 0 and 1
+                this.value = this.value.replace(/[^01]/g, '');
+                
+                // Limit to 8 characters
+                if (this.value.length > 8) {
+                    this.value = this.value.slice(0, 8);
+                }
+                
+                updateBinaryToDecimal(this.value);
+            });
+            
+            // Function to update Decimal to Binary conversion
+            function updateDecimalToBinary(decimal) {
+                const binary = parseInt(decimal).toString(2).padStart(8, '0');
+                binaryOutput.textContent = binary;
+                updateBitRepresentation(binary, 'bit');
             }
             
-            let decimal = parseInt(decimalInput.value);
-            
-            // Batasi input hingga 255 untuk contoh ini
-            if (decimal > 255) {
-                decimal = 255;
-                decimalInput.value = 255;
-            } else if (decimal < 0) {
-                decimal = 0;
-                decimalInput.value = 0;
+            // Function to update Binary to Decimal conversion
+            function updateBinaryToDecimal(binaryStr) {
+                // Jika input kosong, set ke 0
+                if (binaryStr === '') {
+                    decimalOutput.textContent = '0';
+                    // Update representasi bit dengan 8 nol
+                    updateBitRepresentation('00000000', 'b-bit');
+                    return;
+                }
+                
+                // Pad dengan 0 di depan hingga 8 digit untuk perhitungan
+                const paddedBinary = binaryStr.padStart(8, '0');
+                
+                // Convert to decimal
+                const decimal = parseInt(paddedBinary, 2);
+                decimalOutput.textContent = isNaN(decimal) ? 0 : decimal;
+                
+                // Update bit representation
+                updateBitRepresentation(paddedBinary, 'b-bit');
             }
             
-            // Konversi desimal ke biner
-            const binary = decimal.toString(2);
-            binaryOutput.textContent = binary.padStart(8, '0');
-        }
+            // Function to update bit representation
+            function updateBitRepresentation(binary, prefix) {
+                for (let i = 0; i < 8; i++) {
+                    const bitElement = document.getElementById(`${prefix}${7-i}`);
+                    if (bitElement) {
+                        bitElement.textContent = binary[i] || '0';
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
